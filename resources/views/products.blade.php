@@ -77,9 +77,6 @@
 
 @section('scripts')
     <script>
-        $(document).ready( function() { // Wait until document is fully parsed
-
-        })
         $(".btnComprar").click(function(){
             $('#btnSave').attr('productId',$(this).attr('productId'))
             $('#inputValue').val($(this).attr('value'))

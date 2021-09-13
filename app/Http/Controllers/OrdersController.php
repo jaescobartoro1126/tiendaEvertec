@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Models\OrderDetail;
-use App\Models\Product;
 use App\Placetopay\Placetopay;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -18,12 +17,37 @@ class OrdersController extends Controller
             'orders' => Order::get()
         ]);
     }
+    public function show($id)
+    {
+        return view('order', [
+            'order' => Order::find($id)
+        ]);
+    }
 
     public function create(Request $request)
     {
         $input = $request->all();
         $order = $this->saveOrder($input);
         $placetopay=(new Placetopay())->request($order);
+        if ($placetopay->isSuccessful()) {
+            $order->setAttribute('request_id', $placetopay->requestId());
+            $order->save();
+            return response()->json([
+                "error" => false,
+                "url" => $placetopay->processUrl()
+            ]);
+        }else {
+            return response()->json([
+                "error" => true,
+                "mensaje" => $placetopay->status()->message()
+            ]);
+        }
+    }
+
+    public function pay($order_id)
+    {
+        $order = Order::find($order_id);
+        $placetopay= (new Placetopay())->request($order);
         if ($placetopay->isSuccessful()) {
             $order->setAttribute('request_id', $placetopay->requestId());
             $order->save();
@@ -48,7 +72,7 @@ class OrdersController extends Controller
                 $order->setAttribute('status', 'PAYED');
                 $order->save();
             }
-            if ($response->status()->isRejected()) {
+            if ($placetopay->status()->isRejected()) {
                 $order->setAttribute('status', 'REJECTED');
                 $order->save();
             }

@@ -28,13 +28,13 @@
                     <li>
                         <a href="{{URL::to('/')}}" class="nav-link text-white">
                             <i class="fas fa-home"></i>
-                            Home
+                            Inicio
                         </a>
                     </li>
                     <li>
                         <a href="{{URL::to('/orders')}}" class="nav-link text-white">
                             <i class="fas fa-clipboard-list"></i>
-                            Orders
+                            Ordenes
                         </a>
                     </li>
                 </ul>
@@ -43,6 +43,7 @@
     </div>
 </header>
 <div class="container">
+    <input type="hidden" name="_token" id="token" value="{{ csrf_token() }}">
     @yield('content')
 </div>
 
