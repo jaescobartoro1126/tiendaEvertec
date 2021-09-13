@@ -18,6 +18,7 @@ class CreateOrdersTable extends Migration
             $table->string('customer_name', 80)->comment('Nombre Cliente');
             $table->string('customer_email', 120)->comment('Correo Cleinte');
             $table->string('customer_mobile', 40)->comment('telefono cliente');
+            $table->string('request_id', 20)->comment('request placetopay');
             $table->enum('status', ['CREATED', 'PAYED', 'REJECTED'])->comment('estado del pago');
             $table->float('total', 10, 2)->default(0)->nullable(false)->comment("total");
             $table->timestamps();

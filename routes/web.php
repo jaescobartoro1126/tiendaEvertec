@@ -13,6 +13,37 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/', [\App\Http\Controllers\Products::class, 'index']);
+
+Route::post('/createOrders', [\App\Http\Controllers\OrdersController::class, 'create']);
+Route::get('/orderPay/{order}', [\App\Http\Controllers\OrdersController::class, 'orderPay']);
+Route::get('/orders', [\App\Http\Controllers\OrdersController::class, 'index']);
+
+
+Route::get('/orderds', function (\Illuminate\Http\Request $request) {
+    $placetopay = new Dnetix\Redirection\PlacetoPay([
+        'login' => '6dd490faf9cb87a9862245da41170ff2',
+        'tranKey' => '024h1IlD',
+        'url' => 'https://test.placetopay.com/redirection',
+        'rest' => [
+            'timeout' => 45, // (optional) 15 by default
+            'connect_timeout' => 30, // (optional) 5 by default
+        ]
+    ]);
+    $response = $placetopay->query(1846787);
+
+    if ($response->isSuccessful()) {
+        // In order to use the functions please refer to the Dnetix\Redirection\Message\RedirectInformation class
+
+        if ($response->status()->isApproved()) {
+            // The payment has been approved
+        }
+        if ($response->status()->isRejected()) {
+            // The payment has been approved
+        }
+    } else {
+        // There was some error with the connection so check the message
+        print_r($response->status()->message() . "\n");
+    }
+    dd($response);
 });
