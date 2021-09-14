@@ -47,7 +47,7 @@ class OrdersController extends Controller
     public function pay($order_id)
     {
         $order = Order::find($order_id);
-        $placetopay= (new Placetopay())->request($order);
+        $placetopay=(new Placetopay())->request($order);
         if ($placetopay->isSuccessful()) {
             $order->setAttribute('request_id', $placetopay->requestId());
             $order->save();
@@ -63,10 +63,9 @@ class OrdersController extends Controller
         }
     }
 
-    public function orderPay($order_id)
+    public function placetopayRequest($order)
     {
-        $order = Order::find($order_id);
-        $placetopay =(new Placetopay())->request($order);
+        $placetopay =(new Placetopay())->requestId($order);
         if ($placetopay->isSuccessful()) {
             if ($placetopay->status()->isApproved()) {
                 $order->setAttribute('status', 'PAYED');
@@ -77,6 +76,14 @@ class OrdersController extends Controller
                 $order->save();
             }
         }
+        return $placetopay;
+    }
+
+    public function orderPay($order_id)
+    {
+        $order = Order::find($order_id);
+        sleep(10);
+        $placetopay = $this->placetopayRequest($order);
         return view('order', [
             'order' => $order,
             'status' => $order->getAttribute('status')

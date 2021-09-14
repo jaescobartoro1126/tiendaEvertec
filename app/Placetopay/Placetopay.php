@@ -15,9 +15,9 @@ class Placetopay
     public function __construct()
     {
         $this->placetopay = new DnetixPlacetoPay([
-            'login' => '6dd490faf9cb87a9862245da41170ff2',
-            'tranKey' => '024h1IlD',
-            'url' => 'https://test.placetopay.com/redirection',
+            'login' => config('placetopay.login'),
+            'tranKey' => config('placetopay.key'),
+            'url' => config('placetopay.url'),
             'rest' => [
                 'timeout' => 45, // (optional) 15 by default
                 'connect_timeout' => 30, // (optional) 5 by default
@@ -50,7 +50,7 @@ class Placetopay
     }
     public function requestId(Order $order)
     {
-        $response = $this->placetopay->query($order->setAttribute('request_id'));
+        $response = $this->placetopay->query($order->getAttribute('request_id'));
         return $response;
     }
 }

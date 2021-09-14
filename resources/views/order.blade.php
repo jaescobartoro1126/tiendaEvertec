@@ -32,8 +32,8 @@
         <div class="col-md-12">
             @if($order->status !== 'PAYED')
                 <button id="btnPay" class="btn btn-primary" type="button" order="{{ $order->id }}">Pagar</button>
-                <button type="button" class="btn btn-secondary" id="btnBack">Regresar</button>
             @endif
+            <button type="button" class="btn btn-secondary" id="btnBack">Regresar</button>
         </div>
     </div>
 @stop
